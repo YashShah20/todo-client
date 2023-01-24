@@ -1,5 +1,5 @@
 <template>
-    <div class="text-center mt-5 h1 text-capitalize">
+    <div class="text-center text-danger mt-5 h1 text-capitalize">
         404 - page not found
     </div>
 </template>
