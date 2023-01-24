@@ -3,6 +3,10 @@ import About from "./components/about.vue";
 import Profile from "./components/user_profile.vue";
 import Signin from "./components/signin.vue";
 import Signup from "./components/signup.vue";
+import Admin from "./components/admin.vue";
+import Userinfo from "./components/userinfo.vue";
+import pagenotfount from "./components/error.vue";
+
 export default [
   {
     path: "/",
@@ -29,4 +33,18 @@ export default [
     component: Profile,
     name: "profile"
   },
+  {
+    path: "/admin",
+    component: Admin,
+    name: "admin"
+  },
+  {
+    path: "/admin/users/:id",
+    component: Userinfo,
+    name: "userinfo"
+  },{
+    path:"*",
+    component:pagenotfount,
+    name:'pagenotfount'
+  }
 ];

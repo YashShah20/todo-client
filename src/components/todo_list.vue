@@ -1,14 +1,16 @@
 <template>
     <div>
-        <div class="d-flex flex-row-reverse" style="display: ;">
-            <button class="btn btn-lg mb-3 mx-2" @click="showAsCard = false">
+        <div class="d-flex flex-row-reverse">
+            <button class="btn btn-lg mb-3 mx-2" @click="showAsCard = false"
+                :class="{'bg-primary text-light':!showAsCard}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-ul"
                     viewBox="0 0 16 16">
                     <path fill-rule="evenodd"
                         d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
                 </svg>
             </button>
-            <button class="btn btn-lg mb-3 mx-2" @click="showAsCard = true">
+            <button class="btn btn-lg mb-3 mx-2" @click="showAsCard = true"
+                :class="{ 'bg-primary text-light': showAsCard }">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-card-text" viewBox="0 0 16 16">
                     <path
@@ -19,26 +21,27 @@
             </button>
         </div>
         <hr>
-        <div class="row">
+        <div>
             <template v-if="showAsCard">
-                <div class="col col-3 m-2" v-for="note in notes" :key="note.id">
-                    <todo-item :showAsCard="true" :item="note" @rm="$emit('rm')"></todo-item>
+                <div class="row d-flex justify-content-center">
+                    <div class="col col-4 m-2" v-for="note in notes" :key="note.id">
+                        <todo-item :showAsCard="true" :item="note" @rm="$emit('rm')"></todo-item>
+                    </div>
                 </div>
             </template>
             <template v-else>
-                <table class="table table-hover p-2 border border-5">
+                <table class="table table-bordered border border-5">
                     <thead>
                         <tr>
-                            <!-- <th class="w-5"></th>
+                            <th>#</th>
                             <th>Content</th>
-                            <th></th>
-                            <th></th> -->
+                            <th class="text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="note in notes" :key="note.id">
-                            <todo-item :showAsCard="false" :item="note" @rm="$emit('rm')"></todo-item>
-                        </tr>
+                        <template v-for="note in notes">
+                            <todo-item :showAsCard="false" :item="note" @rm="$emit('rm', note.id)"></todo-item>
+                        </template>
                     </tbody>
                 </table>
             </template>
@@ -49,8 +52,9 @@
 
 import todoItem from './todo_item.vue';
 export default {
-    props: {
-        notes: []
+    props: ['notes'],
+    created() {
+        // this.showAsCard = localStorage.getItem("showAsCard") ? true : false
     },
     data() {
         return {
@@ -59,9 +63,10 @@ export default {
     },
     components: {
         'todo-item': todoItem,
-    }, 
+    },
     methods: {
 
+    }, watch: {
     }
 }
 </script>

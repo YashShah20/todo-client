@@ -14,24 +14,28 @@
             <br>
             <div class="">
                 <div class="form-group">
-                    <label for="exampleInputtext1">Add Note</label>
+                    <label for="exampleInputtext1">Add Note <span class="text-danger lead">*</span> </label>
                     <textarea rows="5" class="form-control" v-model="newNoteText"
                         placeholder="your text goes here... "></textarea>
                 </div>
                 <div class="text-center">
-                    <button class="btn" @click="add">Add</button>
+                    <button :disabled="(newNoteText.trim().length > 5 )? false : true" class="btn" @click="add">Add</button>
                 </div>
             </div>
             <br>
-            <select class="dropdown" v-model="notePerPage">
-                <!-- <option value="5">5</option> -->
-                <option value="10">10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-            </select>
-            <label for="">showing {{ notePerPage }} entries</label>
-
+            <div class="d-flex flex-row">
+                <div class="p-1">
+                    <select class="form-control" v-model="notePerPage">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <div class="p-1">
+                    <p>Showing {{ Math.min(nItems, notePerPage) }} entries out of {{ nItems }}</p>
+                </div>
+            </div>
             <todo-list v-bind:notes="notes" @rm="rm">
             </todo-list>
             <app-pagination v-bind:nItems="nItems" v-bind:notesPerPage="notePerPage" v-bind:currentPage="page"
@@ -70,8 +74,8 @@ export default {
     },
     created() {
         // console.log('component created');
-        this.page = 1
-        this.notePerPage = 10
+        this.page = localStorage.getItem("page") || 1
+        this.notePerPage = localStorage.getItem("notePerPage") || 10
         this.loadData();
     },
     methods: {
@@ -104,39 +108,44 @@ export default {
             });
         },
         add: function () {
-            var newNote = {};
-            newNote.content = this.newNoteText;
-
-            this.addDb(newNote)
-            // this.notes.push(newNote)
+            console.log('request');
+            this.nItems = parseInt(this.nItems) + 1
+            this.addDb()
         },
-        addDb(note) {
-            this.$http.post(`http://localhost:3000/notes/`, note, {
+        addDb() {
+            this.$http.post(`http://localhost:3000/notes/`, {
+                content: this.newNoteText
+            }, {
                 headers: {
                     token: localStorage.getItem("token")
                 }
             }).then(res => {
                 console.log(res.body);
+                this.notes.push(res.body)
             }).catch(error => {
                 this.error.code = 1;
                 this.error.msg = error.body.error
                 console.log(error);
             })
         },
-        rm: function (event) {
+        rm: function (id) {
             console.log('delete requested');
+            console.log(id);
             this.notes = this.notes.filter(note => {
-                return note.id != event.target.id
-            })
+                return note.id != id
+            });
+            this.nItems -= 1
         }
     },
     watch: {
         'page': function (nextPage) {
             // this.page = nextPage
+            localStorage.setItem("page", this.page)
             this.loadData();
         },
         'notePerPage': function (newValue) {
             // this.page = nextPage
+            localStorage.setItem("notePerPage", this.notePerPage)
             this.loadData();
         },
     }

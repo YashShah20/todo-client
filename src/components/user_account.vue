@@ -9,7 +9,7 @@
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <router-link class="dropdown-item" to="profile">
+                <router-link class="dropdown-item" to="/profile">
                     <i class="fas fa-user fa-sm fa-fw mr-2 text-white-400"></i>
                     Profile
                 </router-link>
@@ -46,6 +46,8 @@ export default {
 
             localStorage.removeItem("token")
             localStorage.removeItem("username")
+            localStorage.removeItem("page")
+            localStorage.removeItem("notePerPage")
             this.$router.push({ name: 'signin' })
             this.$emit('hideAccount')
         },

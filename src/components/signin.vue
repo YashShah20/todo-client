@@ -17,7 +17,9 @@
             </div>
 
             <div class="text-center">
-                <a class="btn btn-primary" href="#" @click.prevent="signin">Sign In</a>
+                <button class="btn btn-primary" href="#" @click.prevent="signin" :disabled="(!user.name || !user.password)">
+                    Sign In
+                </button>
             </div>
             <div class="text-center mt-3">
                 <router-link class="" to="/signup">Create new account</router-link>
@@ -50,7 +52,13 @@ module.exports = {
                     localStorage.setItem("username", res.body.user.name);
 
                     this.$emit('showAccount');
-                    this.$router.push({ name: "notes" })
+
+                    console.log(res.body.user);
+                    if (res.body.user.role === 3) {
+                        this.$router.push({ name: "admin" })
+                    } else {
+                        this.$router.push({ name: "notes" })
+                    }
                 }).catch(error => {
                     this.error.code = 1;
                     this.error.msg = error.body.error;

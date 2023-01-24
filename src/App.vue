@@ -2,7 +2,7 @@
   <div id="app">
     <app-navbar v-bind:showAccount="showAccount" @hideAccount="showAccount = false"></app-navbar>
     <router-view @showAccount="showAccount = true"></router-view>
-    
+
   </div>
 </template>
 
@@ -25,13 +25,12 @@ export default {
       showAccount: false
     }
   }, methods: {
-
-
   }, created() {
     if (localStorage.getItem("username")) {
       this.showAccount = true
     }
-  }
+  },
+
 }
 </script>
 

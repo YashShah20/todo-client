@@ -14,6 +14,11 @@
                 </b>
                 <span class="text-capitalize">{{ user.role== 2 ? 'user' : 'admin' }}</span>
             </div>
+            <div class="col col-12" v-if="user.role===3"> 
+                <router-link class="btn btn-primary" to="admin">
+                    Go to admin panel
+                </router-link>
+            </div>
         </div>
         <hr>
         <b>
